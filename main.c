@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "API.h"
+#include "smloader.h"
 
-int main() {
-    printf("calc version: %d\n", calc_version());
+int main(int argc, char* argv[]) {
 }

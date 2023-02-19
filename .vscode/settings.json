@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "api.h": "c",
+        "stdio.h": "c",
+        "notedatastructures.h": "c",
+        "smloader.h": "c",
+        "vector": "c"
+    }
+}
