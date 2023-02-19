@@ -1,4 +1,5 @@
 #include "MinaCalc/MinaCalc.h"
+#include <fstream>
 
 extern "C" {
 	#include "API.h"
@@ -57,5 +58,10 @@ extern "C" {
 		);
 
 		return skillset_vector_to_ssr(skillsets);
+	}
+
+	void calc_file(char* file_path){
+		std::ifstream file;
+		file.open(file_path);
 	}
 }

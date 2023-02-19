@@ -9,6 +9,11 @@
 #include <fstream>
 #include "NoteDataStructures.h"
 
+struct ChartInfo {
+    std::string difficultyName;
+    std::vector<NoteInfo> notes;
+};
+
 typedef std::vector<ChartInfo> SMNotes;
 
 struct BPM {
