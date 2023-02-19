@@ -1,7 +1,9 @@
 #include "MinaCalc/MinaCalc.h"
 #include <fstream>
+#include <vector>
 #include "smloader.h"
 
+std::vector<NoteInfo> note_info;
 extern "C" {
 	#include "API.h"
 
@@ -32,25 +34,7 @@ extern "C" {
 		delete reinterpret_cast<Calc*>(calc);
 	}
 
-	MsdForAllRates calc_msd(CalcHandle *calc, const NoteInfo *rows, size_t num_rows) {
-		std::vector<NoteInfo> note_info(rows, rows + num_rows);
-
-		auto msd_vectors = MinaSDCalc(
-			note_info,
-			reinterpret_cast<Calc*>(calc)
-		);
-
-		MsdForAllRates all_rates;
-		for (int i = 0; i < 14; i++) {
-			all_rates.msds[i] = skillset_vector_to_ssr(msd_vectors[i]);
-		}
-
-		return all_rates;
-	}
-
-	Ssr calc_ssr(CalcHandle *calc, NoteInfo *rows, size_t num_rows, float music_rate, float score_goal) {
-		std::vector<NoteInfo> note_info(rows, rows + num_rows);
-
+	Ssr calc_ssr(CalcHandle *calc, float music_rate, float score_goal) {
 		auto skillsets = MinaSDCalc(
 			note_info,
 			music_rate,
@@ -61,9 +45,27 @@ extern "C" {
 		return skillset_vector_to_ssr(skillsets);
 	}
 
-	void calc_file(char* file_path){
+	void calc_file(char* file_path, float rate, float score_goal){
+		CalcHandle* calc = create_calc();
 		std::ifstream file;
 		file.open(file_path);
-		load_from_file(file);
+		SMNotes diffs = load_from_file(file);
+		// printf("path=%s, rate=%f, goal:%f", file_path, rate, score_goal);
+
+		for(ChartInfo diff : diffs){
+			note_info = diff.notes;
+			Ssr chart_msd = calc_ssr(calc, rate, score_goal);
+			printf("%s|%f|%f|%f|%f|%f|%f|%f|%f", 
+			diff.difficultyName.c_str(),
+			chart_msd.overall, 
+			chart_msd.stream, 
+			chart_msd.jumpstream, 
+			chart_msd.handstream, 
+			chart_msd.stamina, 
+			chart_msd.jackspeed, 
+			chart_msd.chordjack, 
+			chart_msd.technical);
+		}
+		destroy_calc(calc);
 	}
 }

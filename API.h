@@ -26,8 +26,4 @@ CalcHandle *create_calc();
 
 void destroy_calc(CalcHandle *calc);
 
-MsdForAllRates calc_msd(CalcHandle *calc, const NoteInfo *rows, size_t num_rows);
-
-Ssr calc_ssr(CalcHandle *calc, NoteInfo *rows, size_t num_rows, float music_rate, float score_goal);
-
-void calc_file(char* file_path);
+void calc_file(char* file_path, float rate, float score_goal);
