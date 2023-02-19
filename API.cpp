@@ -1,5 +1,6 @@
 #include "MinaCalc/MinaCalc.h"
 #include <fstream>
+#include "smloader.h"
 
 extern "C" {
 	#include "API.h"
@@ -63,5 +64,6 @@ extern "C" {
 	void calc_file(char* file_path){
 		std::ifstream file;
 		file.open(file_path);
+		load_from_file(file);
 	}
 }

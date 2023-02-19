@@ -2,4 +2,4 @@ a.exe
 API.o
 libminacalc.a
 MinaCalc.o
-
+smloader.o

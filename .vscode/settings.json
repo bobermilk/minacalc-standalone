@@ -4,6 +4,7 @@
         "stdio.h": "c",
         "notedatastructures.h": "c",
         "smloader.h": "c",
-        "vector": "c"
+        "vector": "c",
+        "fstream": "cpp"
     }
 }
