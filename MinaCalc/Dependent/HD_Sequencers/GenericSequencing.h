@@ -1,6 +1,5 @@
 #pragma once
 #include "../../CalcWindow.h"
-#include <cmath>
 
 /* Contains generic sequencers passed to metahandinfo to be advanced in the row
  * loop */
@@ -18,7 +17,7 @@
 /****** Relevant to anchors ******/
 constexpr float anchor_spacing_buffer_ms = 10.F;
 constexpr float anchor_speed_increase_cutoff_factor = 2.34F;
-static const int anchor_len_cap = 50;
+static const int anchor_len_cap = 5;
 
 /****** Relevant to jacks ******/
 constexpr float jack_spacing_buffer_ms = 10.F;
@@ -129,7 +128,6 @@ struct Finger_Sequencing
 	/// returns an adjusted MS average value, not converted to nps
 	inline virtual float get_ms() = 0;
 
-	virtual ~Finger_Sequencing() = default;
 };
 
 /// Individual jacks, rather than anchors, with more nuance.
@@ -252,7 +250,6 @@ struct Anchor_Sequencing : public Finger_Sequencing
 	}
 
 	/// returns an adjusted MS average value, not converted to nps
-	/// (((currently unused)))
 	inline float get_ms() override
 	{
 		assert(_sc_ms > 0.F);
@@ -263,9 +260,9 @@ struct Anchor_Sequencing : public Finger_Sequencing
 			return _len_cap_ms;
 		}
 
-		static const auto avg_ms_mult = 1.F;
-		static const auto anchor_time_buffer_ms = 0.F;
-		static const auto min_ms = 0.F;
+		static const auto avg_ms_mult = 1.075F;
+		static const auto anchor_time_buffer_ms = 25.F;
+		static const auto min_ms = 82.5F;
 
 		// get total ms
 		const auto total_ms = ms_from(_last, _start);
@@ -517,6 +514,7 @@ struct SequencerGeneral
 									 const bool lower = true) const -> float
 	{
 		if (ct == col_init) {
+
 			return ms_init;
 		}
 
@@ -538,14 +536,6 @@ struct SequencerGeneral
 
 		// simple
 		return _mw_sc_ms.at(ct).get_now();
-	}
-
-	auto get_mw_sc_ms(const col_type& ct)
-	{
-		if (ct == col_left || ct == col_ohjump) {
-			return _mw_sc_ms[col_left];
-		}
-		return _mw_sc_ms[col_right];
 	}
 
 	[[nodiscard]] auto get_any_ms_now() const -> float
