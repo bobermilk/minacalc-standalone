@@ -124,27 +124,23 @@ vector<NoteInfo> parse_main_block(stringstream& sm_text) {
 BPMs parse_bpms_block(stringstream& bpms_block) {
     float next_time;
     float next_bpm;
+    string throwaway;
+    char throwaway2;
     BPMs bpm_list = vector<BPM>();
-    while (bpms_block.rdbuf()->in_avail()) {
-        while (!(bpms_block >> next_time)) {
-            if (!bpms_block.rdbuf()->in_avail())
-                break;
-            bpms_block.get();
+
+    while (bpms_block) {
+        bpms_block >> throwaway2;
+        if(throwaway2 != ','){
+            // we didn't eat a leading comma, put it back!
+            bpms_block.unget();
         }
-        while (bpms_block.get() != '=') {
-            if (!bpms_block.rdbuf()->in_avail())
-                break;
+        bpms_block >> next_time;
+        getline(bpms_block, throwaway, '=');
+        bpms_block >> next_bpm;
+
+        if(bpms_block){
+            bpm_list.push_back(BPM{next_time / 4.f, next_bpm});
         }
-        while (!(bpms_block >> next_bpm)) {
-            if (!bpms_block.rdbuf()->in_avail())
-                break;
-            bpms_block.get();
-        }
-        while (bpms_block.get() != ',') {
-            if (!bpms_block.rdbuf()->in_avail())
-                break;
-        }
-        bpm_list.push_back(BPM{next_time / 4.f, next_bpm});
     }
     return bpm_list;
 }
