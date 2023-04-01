@@ -94,6 +94,10 @@ vector<NoteInfo> parse_main_block(stringstream& sm_text) {
             measure_size = 0.f;
             continue;
         }
+        std::size_t comment_pos = line.find("//");
+        if (comment_pos!=std::string::npos){
+            line=std::string(&line[0], &line[comment_pos]);
+        }
         for(char & it : line) {
             if (it == '\n') {
                 break;
